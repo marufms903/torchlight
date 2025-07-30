@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RGB Torch Light</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: white;
+      font-size: 2em;
+      margin-bottom: 30px;
+    }
+
+    .torch {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, white 0%, rgba(255,255,255,0.2) 50%, transparent 80%);
+      box-shadow: 0 0 100px 40px rgba(255, 255, 255, 0.2);
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      animation: none;
+    }
+
+    .torch.on.white {
+      opacity: 1;
+      transform: scale(1);
+      animation: pulseWhite 3s infinite ease-in-out;
+    }
+
+    .torch.on.rgb {
+      opacity: 1;
+      transform: scale(1);
+      animation: pulseRGB 6s infinite ease-in-out;
+    }
+
+    @keyframes pulseWhite {
+      0%, 100% { box-shadow: 0 0 100px 40px rgba(255, 255, 255, 0.3); }
+      50% { box-shadow: 0 0 150px 60px rgba(255, 255, 255, 0.6); }
+    }
+
+    @keyframes pulseRGB {
+      0%   { box-shadow: 0 0 120px 50px rgba(255, 0, 0, 0.4); }
+      25%  { box-shadow: 0 0 120px 50px rgba(0, 255, 0, 0.4); }
+      50%  { box-shadow: 0 0 120px 50px rgba(0, 0, 255, 0.4); }
+      75%  { box-shadow: 0 0 120px 50px rgba(255, 0, 255, 0.4); }
+      100% { box-shadow: 0 0 120px 50px rgba(255, 0, 0, 0.4); }
+    }
+
+    .controls {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .switch-label {
+      color: white;
+      font-size: 20px;
+      transition: text-shadow 0.3s ease, color 0.3s ease;
+    }
+
+    .switch-label.on {
+      animation: glowText 2s infinite linear;
+    }
+
+    @keyframes glowText {
+      0% { color: red; text-shadow: 0 0 10px red; }
+      25% { color: lime; text-shadow: 0 0 10px lime; }
+      50% { color: cyan; text-shadow: 0 0 10px cyan; }
+      75% { color: yellow; text-shadow: 0 0 10px yellow; }
+      100% { color: magenta; text-shadow: 0 0 10px magenta; }
+    }
+
+    .switch-button {
+      position: relative;
+      width: 70px;
+      height: 36px;
+      background: linear-gradient(135deg, #333, #555);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.4s;
+      box-shadow: inset 0 0 5px #000;
+    }
+
+    .switch-button::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 30px;
+      height: 30px;
+      background-color: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .switch-button.on {
+      background: linear-gradient(135deg, #fdd835, #ffee58);
+    }
+
+    .switch-button.on::before {
+      transform: translateX(34px);
+      background-color: #111;
+    }
+
+    .mode-toggle {
+      padding: 8px 20px;
+      font-size: 14px;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .mode-toggle:hover {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Animated RGB Torch Light</h1>
+  <div id="torch" class="torch"></div>
+
+  <div class="controls">
+    <div class="switch">
+      <span id="statusLabel" class="switch-label">OFF</span>
+      <div id="switchBtn" class="switch-button" onclick="toggleTorch()"></div>
+    </div>
+    <button class="mode-toggle" onclick="toggleMode()">Switch Color Mode (RGB / White)</button>
+  </div>
+
+  <script>
+    const torch = document.getElementById("torch");
+    const switchBtn = document.getElementById("switchBtn");
+    const statusLabel = document.getElementById("statusLabel");
+
+    let isOn = false;
+    let isRGB = false;
+
+    function toggleTorch() {
+      isOn = !isOn;
+      torch.classList.toggle("on", isOn);
+      switchBtn.classList.toggle("on", isOn);
+      statusLabel.textContent = isOn ? "ON" : "OFF";
+      statusLabel.classList.toggle("on", isOn);
+
+      // apply correct mode
+      if (isOn) {
+        torch.classList.add(isRGB ? "rgb" : "white");
+        torch.classList.remove(isRGB ? "white" : "rgb");
+      } else {
+        torch.classList.remove("rgb", "white");
+      }
+    }
+
+    function toggleMode() {
+      isRGB = !isRGB;
+      if (isOn) {
+        torch.classList.toggle("rgb", isRGB);
+        torch.classList.toggle("white", !isRGB);
+      }
+    }
+  </script>
+
+</body>
+</html>
+
+
